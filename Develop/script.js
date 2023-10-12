@@ -8,37 +8,105 @@ const infoStorage = JSON.parse(localStorage.getItem('scheduleInfo')) || [];
 
 
 let currentTime = dayjs();
-console.log (currentTime.format(`dddd, MMM D, HH:mm a`));
+let testCurrent = dayjs('2023-10-12 22:01');
+console.log(currentTime.format(`dddd, MMM D, H:mm a`));
+console.log(currentTime.format('a')==='pm')
 
-
+//dayjs().format('H');
 function testing(){
+  displayDay();
+  let noonCheck = '';
+  let classCheck = '';
   for(x=9; x < 18; x++){
+    
+    if(x <= 11){
+      noonCheck = 'am'
+    }else{
+      noonCheck = 'pm'
+    }
+
+    if(dayjs().format('a') === `pm`){
+      classCheck = classCheckerPM(x);
+    }else{
+      classCheck = classCheckerAM(x);
+    }
+
     const newBlock = `
-    <div id="hour-XXXXXX" class="row time-block${x}">
-      <div class="col-2 col-md-1 hour text-center py-3">${x} o'clock</div>
-      <textarea class="col-8 col-md-10 descripition" rows="3">
-        Punch myself ${x} times!
-      </textarea>
-      <button class="btn saveBtn col-2 col-md-1" aria-labe"save">
-        <i class="fas fa-save" aria-hidden="true"></i>
-      </button>
+    <div id="hour-${x}" class="row time-block ${classCheck}">
+    <div class="col-2 col-md-1 hour text-center py-3">${x} ${noonCheck}</div>
+    <textarea class="col-8 col-md-10 descripition" rows="3">
+    localStorage info to be parsed later here
+    </textarea>
+    <button class="btn saveBtn col-2 col-md-1" aria-labe"save">
+    <i class="fas fa-save" aria-hidden="true"></i>
+    </button>
     </div>`;
     scheduleArea.append(newBlock);
+    console.log(classCheck);
+    // console.log(dayjs().format(`H`))
+    // console.log(dayjs().format(`${x}`))
+    // console.log(dayjs().format(`H`) === `${x}`)
   }
 } 
+
+function classCheckerPM(number){
+  if(number <= 11){
+    return 'past'
+  }else if(dayjs().format(`H`) === `${number}`){
+    return 'present'
+  }else if(dayjs().format(`H`) > `${number}`){
+    return 'past'
+  }else {
+    return 'future'
+  }
+}
+function classCheckerAM(number){
+  if(dayjs().format(`H`) === `${number}`){
+    return 'present'
+  }else if(number === 11){
+    return 'future'
+  }else if(number === 10 && dayjs().format(`H`) !== '11'){
+    return 'future'
+  }else if (number === 10 && dayjs().format(`H`) === '11'){
+    return 'past'
+  }else if (number === 9 && dayjs().format(`H`) === '11'){
+    return 'past'
+  }else if (number === 9 && dayjs().format(`H`) === '10'){
+    return 'past'
+  }else {
+    return 'future'
+  }
+}
+
 
 testing();
 
 
-displayDay();
-
 function displayDay(){
   setInterval(function() {
-    $('#currentDay').text(`${dayjs().format('dddd MMM D, HH:mm:ss a')}`);
+    $('#currentDay').text(`${dayjs().format('dddd MMM D, H:mm:ss a')}`);
   }, 1000);
 }
 
 
+
+
+
+
+
+// if(x <= 11){
+//   noonCheck = 'am'
+// }else{
+//   noonCheck = 'pm'
+// }
+
+// if(dayjs().format(`H`) === `${x}`){
+//   classCheck = 'present';
+// }else if(dayjs().format(`H`) > `${x}` || x === 9){
+//   classCheck = 'past'
+// }else {
+//   classCheck = 'future';
+// }
 
 $(function () {
   // TODO: Add a listener for click events on the save button. This code should
