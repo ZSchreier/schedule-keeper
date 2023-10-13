@@ -4,13 +4,11 @@
 
 const scheduleArea = $('.container-lg');
 
-const infoStorage = JSON.parse(localStorage.getItem('scheduleInfo')) || [];
+const infoStorage = JSON.parse(localStorage.getItem('scheduleInfo')) || ['','','','','','','','',''];
 
 
 let currentTime = dayjs();
 let testCurrent = dayjs('2023-10-12 22:01');
-console.log(currentTime.format(`dddd, MMM D, H:mm a`));
-console.log(currentTime.format('a')==='pm')
 
 //dayjs().format('H');
 function testing(){
@@ -34,18 +32,14 @@ function testing(){
     const newBlock = `
     <div id="hour-${x}" class="row time-block ${classCheck}">
     <div class="col-2 col-md-1 hour text-center py-3">${x} ${noonCheck}</div>
-    <textarea class="col-8 col-md-10 descripition" rows="3">
-    localStorage info to be parsed later here
+    <textarea class="col-8 col-md-10 descripition text-${x}" rows="3">
+      ${infoStorage[x-9]}
     </textarea>
-    <button class="btn saveBtn col-2 col-md-1" aria-labe"save">
-    <i class="fas fa-save" aria-hidden="true"></i>
+    <button class="btn saveBtn col-2 col-md-1 button-${x}" aria-label="save">
+    <i class="fas fa-save icon-${x}" aria-hidden="true"></i>
     </button>
     </div>`;
     scheduleArea.append(newBlock);
-    console.log(classCheck);
-    // console.log(dayjs().format(`H`))
-    // console.log(dayjs().format(`${x}`))
-    // console.log(dayjs().format(`H`) === `${x}`)
   }
 } 
 
@@ -78,8 +72,9 @@ function classCheckerAM(number){
   }
 }
 
+// function saveChanges(){
 
-testing();
+// }
 
 
 function displayDay(){
@@ -89,6 +84,28 @@ function displayDay(){
 }
 
 
+$("div").click(function(event){
+  event.preventDefault();
+  if(event.target.matches(".saveBtn") || event.target.matches("i")){
+    for(x=9; x < 18; x++){
+      if(event.target.matches(`.button-${x}`) || event.target.matches(`.icon-${x}`)){
+        let newText = rowFinder(x);
+        infoStorage[x-9] = newText;
+        localStorage.setItem("scheduleInfo", JSON.stringify(infoStorage));
+      }
+    }
+  }
+
+});
+
+
+function rowFinder(number){
+  let rowSelect = $(`.text-${number}`);
+  return rowSelect.val().trim()
+}
+
+
+testing();
 
 
 
