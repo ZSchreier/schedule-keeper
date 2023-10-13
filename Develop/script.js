@@ -1,6 +1,6 @@
-// Wrap all code that interacts with the DOM in a call to jQuery to ensure that
-// the code isn't run until the browser has finished rendering all the elements
-// in the html.
+
+
+// Here are the global variables used throughout the various functions
 
 const scheduleArea = $('.container-lg');
 
@@ -10,8 +10,9 @@ const infoStorage = JSON.parse(localStorage.getItem('scheduleInfo')) || ['','','
 let currentTime = dayjs();
 let testCurrent = dayjs('2023-10-12 22:01');
 
-//dayjs().format('H');
-function testing(){
+
+// This is the main function that fires off when the webpage loads and dynamically creates the rows with the info inside them
+function initialize(){
   displayDay();
   let noonCheck = '';
   let classCheck = '';
@@ -43,6 +44,7 @@ function testing(){
   }
 } 
 
+// This function is used to determine the class (background color) of the rows if the current hour is in the PM
 function classCheckerPM(number){
   if(number <= 11){
     return 'past'
@@ -54,6 +56,8 @@ function classCheckerPM(number){
     return 'future'
   }
 }
+
+// Like above, this function determines the class of the row if the current hour is in the morning AM
 function classCheckerAM(number){
   if(dayjs().format(`H`) === `${number}`){
     return 'present'
@@ -72,18 +76,14 @@ function classCheckerAM(number){
   }
 }
 
-// function saveChanges(){
-
-// }
-
-
+// This function is a "timer" that shows the current time at the top of the page
 function displayDay(){
   setInterval(function() {
     $('#currentDay').text(`${dayjs().format('dddd MMM D, H:mm:ss a')}`);
   }, 1000);
 }
 
-
+// This is an event listener that listens for a click on the button in a row, which triggers some checks before saving the textarea value to localStorage for use when the webpage loads again
 $("div").click(function(event){
   event.preventDefault();
   if(event.target.matches(".saveBtn") || event.target.matches("i")){
@@ -98,59 +98,11 @@ $("div").click(function(event){
 
 });
 
-
+// A small helper function that's called in the above function, determines the value of the associated textarea element and kicks it back to the function above
 function rowFinder(number){
   let rowSelect = $(`.text-${number}`);
   return rowSelect.val().trim()
 }
 
 
-testing();
-
-
-
-
-
-// if(x <= 11){
-//   noonCheck = 'am'
-// }else{
-//   noonCheck = 'pm'
-// }
-
-// if(dayjs().format(`H`) === `${x}`){
-//   classCheck = 'present';
-// }else if(dayjs().format(`H`) > `${x}` || x === 9){
-//   classCheck = 'past'
-// }else {
-//   classCheck = 'future';
-// }
-
-$(function () {
-  // TODO: Add a listener for click events on the save button. This code should
-  // use the id in the containing time-block as a key to save the user input in
-  // local storage. HINT: What does `this` reference in the click listener
-  // function? How can DOM traversal be used to get the "hour-x" id of the
-  // time-block containing the button that was clicked? How might the id be
-  // useful when saving the description in local storage?
-
-  // var newBlock = $(`
-  // <div id="hour-XXXXXX" class="row time-block${currentClass}">
-  //   <div class="col-2 col-md-1 hour text-center py-3">${hourName}</div>
-  //   <textarea class="col-8 col-md-10 descripition" rows="3">
-  //     ${hourData}
-  //   </textarea>
-  //   <button class="btn saveBtn col-2 col-md-1" aria-labe"save">
-  //     <i class="fas fa-save" aria-hidden="true"></i>
-  //   </button>
-  // </div>`
-  // )
-  // TODO: Add code to apply the past, present, or future class to each time
-  // block by comparing the id to the current hour. HINTS: How can the id
-  // attribute of each time-block be used to conditionally add or remove the
-  // past, present, and future classes? How can Day.js be used to get the
-  // current hour in 24-hour time?
-  //
-  // TODO: Add code to get any user input that was saved in localStorage and set
-  // the values of the corresponding textarea elements. HINT: How can the id
-  // attribute of each time-block be used to do this?
-});
+initialize();
